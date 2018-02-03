@@ -1,0 +1,48 @@
+sgtk is a set of functions to create a GUI based on gtk.
+Each item has it's own ID (based on the name attached). 
+To get a state of an item use Find_Widget();
+
+Just type 'make' to create a set of objects which you can link into your project.
+For Windows, in the makefile set OS to windows, set environment variable OS to windows.
+
+Simple example:
+
+##################################################################
+
+#include "sgtk.h"
+#define BUT1 "choice1"
+#define BUT2 "choice2"
+#define BUT3 "spin"
+#define BUTEXIT "Exit"
+
+void func(GtkWidget *widget, gpointer data)
+{
+  char *name=(char *)data;
+  if (!strcmp(name,BUT1)) puts("Button 1");
+  if (!strcmp(name,BUT2)) puts("Button 2");
+  if (!strcmp(name,BUT3)) puts("Spin");
+  if (!strcmp(name,BUTEXIT)) gtk_main_quit();;
+}
+
+int main(int argc, char **argv)
+{
+  GtkWidget *wnd,*wdgt[3];
+
+  gtk_init(&argc, &argv);
+  wnd=Create_Window(NULL,0,0,"Test",gtk_main_quit);
+
+  wdgt[1]=Create_ButtonArray("arr",func,3,
+              RADIOs,BUT1,
+              RADIOn,BUT2,
+              SPIN,BUT3,"%d%d%d",10,1,300,
+              0
+              );
+  wdgt[2]=Create_Button(BUTEXIT,func);
+  wdgt[0]=Pack("xx",'v',wdgt[1],1,wdgt[2],1,NULL);
+  gtk_container_add(GTK_CONTAINER(wnd),wdgt[0]);
+  gtk_widget_show_all(wnd);
+  gtk_main();
+  return 0;
+}
+
+##################################################################
